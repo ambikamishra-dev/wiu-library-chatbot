@@ -1,0 +1,29 @@
+# Virtual environment
+venv/
+
+# Environment variables
+.env
+
+# FAQ data 
+data/*.xlsx
+data/*.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Logs
+logs/
+
+# Database
+*.db
+*.sqlite3
+
+# OS
+.DS_Store
+
+# VS Code
+.vscode/
