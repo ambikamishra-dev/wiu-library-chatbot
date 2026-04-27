@@ -1,18 +1,14 @@
 from pydantic_settings import BaseSettings
+from pydantic import ConfigDict
 
 
-class Settings(BaseSettings)
+class Settings(BaseSettings):
+    model_config = ConfigDict(env_file=".env")
 
-
-app_env: str = "development"
-faq_file_path: str = "data/faq.xlsx"
-
-similarity_threshold: float = 0.55
-log_level: str = "INFO"
-
-
-class Config:
-    env_file = ".env"
+    app_env: str = "development"
+    faq_file_path: str = "data/faq.xlsx"
+    similarity_threshold: float = 0.55
+    log_level: str = "INFO"
 
 
 settings = Settings()
