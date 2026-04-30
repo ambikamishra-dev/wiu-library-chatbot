@@ -91,14 +91,77 @@ def test_chat_missing_message_field():
 
 
 def test_unanswered_endpoint_returns_list():
-    response = client.get("/api/admin/unanswered")
+    response = client.get(
+        "/api/admin/unanswered",
+        auth=("libraryadmin", "wiu_library_2026")
+    )
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
 
 def test_reload_endpoint():
-    response = client.get("/api/admin/reload")
+    response = client.get(
+        "/api/admin/reload",
+        auth=("libraryadmin", "wiu_library_2026")
+    )
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "reloaded"
     assert data["count"] == 11
+
+
+def test_reload_rebuilds_corpus_cache():
+    from app.core.semantic import _corpus_cache
+    response = client.get(
+        "/api/admin/reload",
+        auth=("libraryadmin", "wiu_library_2026")
+    )
+    assert response.status_code == 200
+    assert _corpus_cache["embeddings"] is not None
+
+
+def test_unanswered_query_logged_to_db():
+    client.post(
+        "/api/chat", json={"message": "where can I park my car on campus"})
+    response = client.get(
+        "/api/admin/unanswered",
+        auth=("libraryadmin", "wiu_library_2026")
+    )
+    queries = [r["query"] for r in response.json()]
+    assert any("park" in q for q in queries)
+
+
+def test_response_cache_hit_on_repeat_query():
+    from app.api.routes import _response_cache
+    _response_cache.clear()
+    client.post("/api/chat", json={"message": "what are the library hours"})
+    assert len(_response_cache) > 0
+    response = client.post(
+        "/api/chat", json={"message": "what are the library hours"})
+    assert response.json()["matched"] is True
+
+
+def test_admin_unanswered_requires_auth():
+    response = client.get("/api/admin/unanswered")
+    assert response.status_code == 401
+
+
+def test_admin_reload_requires_auth():
+    response = client.get("/api/admin/reload")
+    assert response.status_code == 401
+
+
+def test_admin_wrong_credentials_rejected():
+    response = client.get(
+        "/api/admin/unanswered",
+        auth=("wronguser", "wrongpass")
+    )
+    assert response.status_code == 401
+
+
+def test_admin_correct_credentials_accepted():
+    response = client.get(
+        "/api/admin/unanswered",
+        auth=("libraryadmin", "wiu_library_2026")
+    )
+    assert response.status_code == 200
