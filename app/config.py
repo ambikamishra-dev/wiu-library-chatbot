@@ -10,5 +10,8 @@ class Settings(BaseSettings):
     similarity_threshold: float = 0.55
     log_level: str = "INFO"
 
+    admin_username: str = "admin"
+    admin_password: str = "changeme"
+
 
 settings = Settings()
