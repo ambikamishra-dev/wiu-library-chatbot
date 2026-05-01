@@ -1,0 +1,424 @@
+/* WIU Library Chatbot Widget Styles
+   Brand colors: WIU Purple #663399, WIU Gold #FFCC00
+    */
+
+:root {
+  --wiu-purple: #663399;
+  --wiu-purple-dark: #4a1f73;
+  --wiu-purple-deep: #2e0f50;
+  --wiu-purple-soft: #8a52b8;
+  --wiu-gold: #FFCC00;
+  --wiu-gold-dark: #d4a800;
+  --wiu-purple-pale: #f3eaf9;
+  --wiu-purple-tint: #ede0f7;
+  --wiu-gray-50: #f8f7fa;
+  --wiu-gray-100: #f0edf5;
+  --wiu-gray-200: #e1d9ed;
+  --wiu-gray-300: #c4b8d8;
+  --wiu-gray-500: #8a7aa0;
+  --wiu-gray-700: #4a3f5c;
+  --wiu-gray-900: #1a1225;
+  --wiu-text-muted: #5c4e72;
+  --wiu-radius: 12px;
+  --wiu-shadow: 0 8px 32px rgba(102,51,153,0.18);
+  --wiu-transition: all 0.2s ease;
+}
+
+/* ── Floating Button ─────────────────────────────────────────── */
+#wiu-chat-btn {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--wiu-purple) 0%, var(--wiu-purple-dark) 100%);
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--wiu-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: var(--wiu-transition);
+}
+
+#wiu-chat-btn:hover {
+  transform: scale(1.08);
+  background: linear-gradient(135deg, var(--wiu-purple-dark) 0%, var(--wiu-purple-deep) 100%);
+}
+
+#wiu-chat-btn svg {
+  width: 26px;
+  height: 26px;
+  fill: white;
+}
+
+/* ── Notification Banner ─────────────────────────────────────── */
+#wiu-chat-notification {
+  position: fixed;
+  bottom: 96px;
+  right: 28px;
+  background: white;
+  border: 1.5px solid var(--wiu-purple-tint);
+  border-radius: var(--wiu-radius);
+  padding: 10px 14px 10px 14px;
+  box-shadow: var(--wiu-shadow);
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 240px;
+  animation: wiu-slide-up 0.3s ease;
+}
+
+#wiu-chat-notification p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--wiu-gray-700);
+  line-height: 1.4;
+  font-family: Georgia, serif;
+}
+
+#wiu-chat-notification p strong {
+  color: var(--wiu-purple);
+}
+
+#wiu-notif-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--wiu-gray-500);
+  font-size: 16px;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+#wiu-notif-close:hover {
+  color: var(--wiu-gray-900);
+}
+
+/* ── Chat Window ─────────────────────────────────────────────── */
+#wiu-chat-window {
+  position: fixed;
+  bottom: 96px;
+  right: 28px;
+  width: 360px;
+  max-height: 540px;
+  background: white;
+  border-radius: var(--wiu-radius);
+  box-shadow: var(--wiu-shadow);
+  z-index: 9997;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1.5px solid var(--wiu-purple-tint);
+  animation: wiu-slide-up 0.25s ease;
+  font-family: Georgia, serif;
+}
+
+#wiu-chat-window.wiu-open {
+  display: flex;
+}
+
+/* ── Chat Header ─────────────────────────────────────────────── */
+#wiu-chat-header {
+  background: linear-gradient(135deg, var(--wiu-purple-deep) 0%, var(--wiu-purple) 100%);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#wiu-chat-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#wiu-chat-header-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--wiu-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+#wiu-chat-header h3 {
+  margin: 0;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: Georgia, serif;
+}
+
+#wiu-chat-header p {
+  margin: 2px 0 0;
+  color: rgba(255,255,255,0.75);
+  font-size: 11px;
+  font-family: Georgia, serif;
+}
+
+#wiu-chat-close {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.8);
+  cursor: pointer;
+  font-size: 20px;
+  padding: 0;
+  line-height: 1;
+}
+
+#wiu-chat-close:hover {
+  color: white;
+}
+
+/* ── Messages Area ───────────────────────────────────────────── */
+#wiu-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--wiu-gray-50);
+}
+
+#wiu-chat-messages::-webkit-scrollbar {
+  width: 4px;
+}
+
+#wiu-chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#wiu-chat-messages::-webkit-scrollbar-thumb {
+  background: var(--wiu-gray-300);
+  border-radius: 4px;
+}
+
+/* ── Message Bubbles ─────────────────────────────────────────── */
+.wiu-msg {
+  display: flex;
+  flex-direction: column;
+  max-width: 85%;
+}
+
+.wiu-msg-bot {
+  align-self: flex-start;
+}
+
+.wiu-msg-user {
+  align-self: flex-end;
+}
+
+.wiu-bubble {
+  padding: 10px 13px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  font-family: Georgia, serif;
+}
+
+.wiu-msg-bot .wiu-bubble {
+  background: white;
+  color: var(--wiu-gray-900);
+  border: 1px solid var(--wiu-gray-200);
+  border-bottom-left-radius: 3px;
+}
+
+.wiu-msg-user .wiu-bubble {
+  background: linear-gradient(135deg, var(--wiu-purple) 0%, var(--wiu-purple-dark) 100%);
+  color: white;
+  border-bottom-right-radius: 3px;
+}
+
+/* ── URL Link Buttons ────────────────────────────────────────── */
+.wiu-url-links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.wiu-url-link {
+  display: inline-block;
+  padding: 6px 12px;
+  background: var(--wiu-purple-pale);
+  border: 1px solid var(--wiu-purple-tint);
+  border-radius: 6px;
+  color: var(--wiu-purple);
+  font-size: 12px;
+  text-decoration: none;
+  font-family: Georgia, serif;
+  transition: var(--wiu-transition);
+}
+
+.wiu-url-link:hover {
+  background: var(--wiu-purple-tint);
+  color: var(--wiu-purple-dark);
+}
+
+/* ── Quick Buttons ───────────────────────────────────────────── */
+#wiu-quick-buttons {
+  padding: 0 16px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  background: var(--wiu-gray-50);
+}
+
+.wiu-quick-btn {
+  padding: 6px 11px;
+  background: white;
+  border: 1.5px solid var(--wiu-purple-tint);
+  border-radius: 20px;
+  color: var(--wiu-purple);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: Georgia, serif;
+  transition: var(--wiu-transition);
+  white-space: nowrap;
+}
+
+.wiu-quick-btn:hover {
+  background: var(--wiu-purple);
+  color: white;
+  border-color: var(--wiu-purple);
+}
+
+/* ── Typing Indicator ────────────────────────────────────────── */
+.wiu-typing {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 13px;
+  background: white;
+  border: 1px solid var(--wiu-gray-200);
+  border-radius: 10px;
+  border-bottom-left-radius: 3px;
+  width: fit-content;
+}
+
+.wiu-typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--wiu-purple-soft);
+  animation: wiu-bounce 1.2s infinite;
+}
+
+.wiu-typing span:nth-child(2) { animation-delay: 0.2s; }
+.wiu-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+/* ── Input Area ──────────────────────────────────────────────── */
+#wiu-chat-input-area {
+  padding: 12px 14px;
+  border-top: 1px solid var(--wiu-gray-200);
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  background: white;
+}
+
+#wiu-chat-input {
+  flex: 1;
+  border: 1.5px solid var(--wiu-gray-200);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: Georgia, serif;
+  color: var(--wiu-gray-900);
+  resize: none;
+  outline: none;
+  max-height: 80px;
+  line-height: 1.4;
+  background: var(--wiu-gray-50);
+}
+
+#wiu-chat-input:focus {
+  border-color: var(--wiu-purple-soft);
+  background: white;
+}
+
+#wiu-chat-input::placeholder {
+  color: var(--wiu-gray-500);
+}
+
+#wiu-chat-send {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--wiu-purple);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: var(--wiu-transition);
+}
+
+#wiu-chat-send:hover {
+  background: var(--wiu-purple-dark);
+}
+
+#wiu-chat-send svg {
+  width: 16px;
+  height: 16px;
+  fill: white;
+}
+
+/* ── Disclaimer ──────────────────────────────────────────────── */
+#wiu-chat-disclaimer {
+  padding: 6px 14px 8px;
+  background: white;
+  border-top: 1px solid var(--wiu-gray-100);
+  text-align: center;
+}
+
+#wiu-chat-disclaimer p {
+  margin: 0;
+  font-size: 10px;
+  color: var(--wiu-gray-500);
+  font-family: Georgia, serif;
+}
+
+#wiu-chat-disclaimer a {
+  color: var(--wiu-purple-soft);
+  text-decoration: none;
+}
+
+#wiu-chat-disclaimer a:hover {
+  text-decoration: underline;
+}
+
+/* ── Animations ──────────────────────────────────────────────── */
+@keyframes wiu-slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes wiu-bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30%           { transform: translateY(-5px); }
+}
+
+/* ── Mobile Responsive ───────────────────────────────────────── */
+@media (max-width: 480px) {
+  #wiu-chat-window {
+    width: calc(100vw - 24px);
+    right: 12px;
+    bottom: 80px;
+  }
+
+  #wiu-chat-notification {
+    right: 12px;
+    max-width: calc(100vw - 80px);
+  }
+}

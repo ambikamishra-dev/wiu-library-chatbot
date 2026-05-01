@@ -1,3 +1,4 @@
+from fastapi.responses import HTMLResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi import Depends, HTTPException, status
 import secrets
@@ -140,6 +141,24 @@ async def chat(req: ChatRequest, request: Request):
 @router.get("/health")
 async def health():
     return {"status": "ok", "timestamp": datetime.now(timezone.utc).isoformat()}
+
+
+@router.get("/demo", response_class=HTMLResponse)
+async def demo():
+    with open("app/templates/widget_demo.html", "r") as f:
+        return f.read()
+
+
+@router.get("/quick-buttons")
+async def quick_buttons():
+    from app.core.loader import get_quick_buttons
+    buttons = get_quick_buttons()
+    return [{"question": e.question, "faq_id": e.faq_id} for e in buttons]
+
+
+@router.get("/config")
+async def get_config():
+    return {"api_base_url": settings.api_base_url}
 
 
 @router.get("/admin/unanswered")

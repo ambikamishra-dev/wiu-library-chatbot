@@ -15,6 +15,37 @@ _corpus_cache: dict = {
     "mapped": []
 }
 
+# Library domain vocabulary for scope check.
+# If query has zero overlap with these terms AND semantic score is below 0.85,
+# we reject the match — prevents false positives on out-of-scope queries.
+LIBRARY_DOMAIN_TERMS = {
+    "library", "malpass", "book", "books", "database", "databases",
+    "hours", "close", "renew", "renewal", "reserve", "reserves",
+    "print", "printing", "study", "room", "access", "catalog", "ishare",
+    "interlibrary", "loan", "article", "articles", "research", "resource",
+    "librarian", "checkout", "borrow", "return", "account", "wiu",
+    "course", "textbook", "instruction", "classroom", "computer",
+    "open", "schedule", "when", "sunday", "saturday", "weekend"
+}
+
+
+# Terms that indicate the query is about a non-library campus facility
+# These override a positive domain match
+NON_LIBRARY_TERMS = {
+    "cafeteria", "cafe", "food", "dining", "restaurant", "parking",
+    "gym", "fitness", "recreation", "health", "clinic", "bookstore",
+    "financial", "aid", "tuition", "registration", "admissions",
+    "dormitory", "dorm", "housing", "shuttle", "bus", "transit"
+}
+
+
+def _is_library_related(query: str) -> bool:
+    words = set(query.lower().split())
+    # Reject if query contains non-library facility terms
+    if words & NON_LIBRARY_TERMS:
+        return False
+    return bool(words & LIBRARY_DOMAIN_TERMS)
+
 
 def _build_corpus(entries: list[FAQEntry]) -> tuple[list[str], list[FAQEntry]]:
     texts, mapped = [], []
@@ -45,6 +76,12 @@ def semantic_match(query: str, entries: list[FAQEntry]) -> FAQEntry | None:
     best_score = float(scores[best_idx])
 
     if best_score >= settings.similarity_threshold:
+        # Domain scope check — if score is below 0.85 and query has no
+        # library-related terms, reject to avoid false positives
+        if best_score < 0.90 and not _is_library_related(query):
+            log.info("semantic_match_out_of_scope",
+                     query=query, score=round(best_score, 3))
+            return None
         match = _corpus_cache["mapped"][best_idx]
         log.info("semantic_match_found", query=query,
                  faq_id=match.faq_id, score=round(best_score, 3))

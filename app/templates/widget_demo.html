@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WIU Library Chatbot — Demo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Georgia, serif;
+      background: #f8f7fa;
+      min-height: 100vh;
+    }
+    /* Simulated WIU header */
+    .wiu-header {
+      background: #2e0f50;
+      padding: 12px 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .wiu-header-logo {
+      width: 40px;
+      height: 40px;
+      background: #FFCC00;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: #2e0f50;
+      font-size: 14px;
+    }
+    .wiu-header h1 {
+      color: white;
+      font-size: 18px;
+      font-weight: normal;
+    }
+    .wiu-nav {
+      background: #663399;
+      padding: 10px 32px;
+      display: flex;
+      gap: 24px;
+    }
+    .wiu-nav a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 14px;
+    }
+    .wiu-nav a:hover { color: white; }
+    .wiu-content {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+    .wiu-content h2 {
+      color: #2e0f50;
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+    .wiu-content p {
+      color: #4a3f5c;
+      line-height: 1.7;
+      margin-bottom: 16px;
+      font-size: 15px;
+    }
+    .wiu-card {
+      background: white;
+      border: 1px solid #e1d9ed;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .wiu-card h3 {
+      color: #663399;
+      margin-bottom: 10px;
+      font-size: 17px;
+    }
+    .demo-badge {
+      display: inline-block;
+      background: #fffadc;
+      border: 1px solid #f5e27a;
+      color: #4a3f5c;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Simulated WIU Library Page -->
+  <div class="wiu-header">
+    <div class="wiu-header-logo">WIU</div>
+    <h1>University Libraries — Malpass Library</h1>
+  </div>
+
+  <nav class="wiu-nav">
+    <a href="#">Home</a>
+    <a href="#">Databases</a>
+    <a href="#">Hours</a>
+    <a href="#">My Account</a>
+    <a href="#">Research Help</a>
+    <a href="#">Contact</a>
+  </nav>
+
+  <div class="wiu-content">
+    <span class="demo-badge">🧪 Chatbot Demo Page — Development Only</span>
+
+    <h2>Welcome to Malpass Library</h2>
+    <p>
+      Western Illinois University's Malpass Library provides access to millions of
+      resources to support your research, coursework, and lifelong learning. Browse
+      our collections, access databases, and get help from our expert librarians.
+    </p>
+
+    <div class="wiu-card">
+      <h3>Library Hours</h3>
+      <p>Monday–Thursday: 8:00 AM – 12:00 AM<br>
+         Friday: 8:00 AM – 6:00 PM<br>
+         Saturday: 11:00 AM – 6:00 PM<br>
+         Sunday: 1:00 PM – 12:00 AM</p>
+    </div>
+
+    <div class="wiu-card">
+      <h3>Research Databases</h3>
+      <p>Access thousands of journals, articles, and research databases from on or off campus
+         using your WIU login credentials.</p>
+    </div>
+
+    <div class="wiu-card">
+      <h3>Ask a Librarian</h3>
+      <p>Our librarians are available to help you find resources, develop research strategies,
+         and navigate our collections. Use the chat widget in the bottom right corner to get
+         instant answers to common questions.</p>
+    </div>
+  </div>
+
+  <!-- Chatbot widget embed — this is the single line the web team adds -->
+  <script src="http://127.0.0.1:8000/static/js/chatbot.js"></script>
+
+</body>
+</html>
