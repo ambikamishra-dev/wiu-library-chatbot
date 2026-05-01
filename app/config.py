@@ -13,5 +13,7 @@ class Settings(BaseSettings):
     admin_username: str = "admin"
     admin_password: str = "changeme"
 
+    api_base_url: str = "http://127.0.0.1:8000"
+
 
 settings = Settings()

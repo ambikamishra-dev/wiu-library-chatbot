@@ -5,7 +5,7 @@ venv/
 .env
 
 # FAQ data 
-data/*.xlsx
+data/
 data/*.csv
 
 # Python
