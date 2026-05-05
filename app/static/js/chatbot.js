@@ -34,12 +34,20 @@
   // ── HTML ───────────────────────────────────────────────────
   function buildWidget() {
     // Notification banner
-    const notification = document.createElement('div');
-    notification.id = 'wiu-chat-notification';
-    notification.innerHTML = `
-      <p><strong>Ask the Library!</strong><br>Have a question? I can help.</p>
-      <button id="wiu-notif-close" aria-label="Close notification">×</button>
-    `;
+    const notifMessages = [
+    "<strong>Library assistance</strong><br>Have a question? I can help.",
+    "<strong>Need Help?</strong><br>Ask me about library services.",
+    "<strong>Questions?</strong><br>I'm here to help with library inquiries.",
+    "<strong>Library Chatbot</strong><br>Ask me anything about the library.",
+];
+const randomMsg = notifMessages[Math.floor(Math.random() * notifMessages.length)];
+
+const notification = document.createElement('div');
+notification.id = 'wiu-chat-notification';
+notification.innerHTML = `
+    <p>📚 ${randomMsg}</p>
+    <button id="wiu-notif-close" aria-label="Close notification">×</button>
+`;
 
     // Floating button
     const btn = document.createElement('button');
@@ -59,7 +67,7 @@
     window_.innerHTML = `
       <div id="wiu-chat-header">
         <div id="wiu-chat-header-left">
-          <div id="wiu-chat-header-avatar">📚</div>
+          <div id="wiu-chat-header-avatar"><img src="${API_BASE}/static/css/library-avatar.png" alt="Malpass Library" style="width:30px;height:30px;object-fit:contain;border-radius:4px;"></div>
           <div>
             <h3>WIU Library Assistant</h3>
             <p>Ask me anything about the library</p>
@@ -167,17 +175,32 @@
 
     // Add URL links if present
     if (urls && urls.length > 0) {
-        const linksDiv = document.createElement('div');
-        linksDiv.className = 'wiu-url-links';
-        urls.forEach(({ url, label }) => {
-            const a = document.createElement('a');
+    const linksDiv = document.createElement('div');
+    linksDiv.className = 'wiu-url-links';
+    
+    urls.forEach(({ url, label }) => {
+        const a = document.createElement('a');
+        a.className = 'wiu-url-link';
+        a.textContent = label || url;
+
+        if (url === 'https://www.wiu.edu/libraries/contact.php') {
+            a.href = '#';
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                addMessage(
+                    "For research questions or assignments, contact our librarians:\n\nStacia McKeever — sr-mckeever@wiu.edu\nNadia Nieblas Nunez — n-nieblasnunez@wiu.edu\nPhone: (309) 298-2326\nLocation: Malpass Library, 3rd floor\nOffice hours: Monday–Friday, 9am–5pm",
+                    'bot',
+                    []
+                );
+            });
+        } else {
             a.href = url;
             a.target = '_blank';
             a.rel = 'noopener noreferrer';
-            a.className = 'wiu-url-link';
-            a.textContent = label || url;
-            linksDiv.appendChild(a);
-        });
+        }
+
+        linksDiv.appendChild(a);
+    });
 
         // Back to main menu button
         const backBtn = document.createElement('button');

@@ -1,4 +1,5 @@
 from fastapi.responses import HTMLResponse
+import random
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi import Depends, HTTPException, status
 import secrets
@@ -19,10 +20,15 @@ log = structlog.get_logger()
 router = APIRouter()
 DB_PATH = "logs/unanswered.db"
 
-FALLBACK_RESPONSE = (
-    "I'm sorry, I don't have an answer for that yet. "
-    "For further assistance please contact the library directly."
-)
+FALLBACK_RESPONSES = [
+    "I apologize, I couldn't understand your question. I assist with library hours, catalog searches, interlibrary loans, and research help. Please rephrase.",
+    "Thank you for your question, but I'm unsure how to assist. Common topics include hours, book availability, and databases. Try again?",
+    "Pardon, that doesn't match my knowledge. I handle inquiries on hours, renewals, journals, databases, and printing. Could you clarify?",
+    "I'm sorry, I don't recognize that request. Please rephrase or ask about hours, borrowing, printing services, or databases. How may I assist further?",
+    "Thank you, but I need more details. I can help with library hours, item renewals, catalog searches, or staff contacts. Please try rewording.",
+    "I regret I cannot answer that. Suggested topics: operating hours, book checkouts, printing, renewals, or databases. Rephrase your question?",
+    "Apologies for the confusion. For help with hours, finding materials, account status, or printing, please rephrase or select a topic.",
+]
 FALLBACK_URL = "https://www.wiu.edu/libraries/contact.php"
 FALLBACK_URL_LABEL = "Contact the Library →"
 RATE_LIMITED_RESPONSE = "Too many requests. Please wait a moment before trying again."
@@ -132,7 +138,7 @@ async def chat(req: ChatRequest, request: Request):
     log_unanswered(query)
     log.info("chat_no_match", query=query, ip=client_ip)
     return ChatResponse(
-        answer=FALLBACK_RESPONSE,
+        answer=random.choice(FALLBACK_RESPONSES),
         urls=[{"url": FALLBACK_URL, "label": FALLBACK_URL_LABEL}],
         matched=False,
     )
