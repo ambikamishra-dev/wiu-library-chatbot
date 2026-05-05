@@ -62,3 +62,24 @@ def test_semantic_match_builds_cache_if_empty(entries):
     assert _corpus_cache["embeddings"] is None
     match = semantic_match("library hours", entries)
     assert _corpus_cache["embeddings"] is not None
+
+
+def test_semantic_match_timeout(entries, monkeypatch):
+    """
+    If embedding raises TimeoutError, semantic_match returns None
+    instead of hanging the request indefinitely.
+    """
+    import concurrent.futures
+    from app.core import semantic
+
+    # Build corpus cache first with real model
+    build_corpus_cache(entries)
+
+    # Now patch encode to simulate timeout on query embedding only
+    def timeout_encode(*args, **kwargs):
+        raise concurrent.futures.TimeoutError()
+
+    monkeypatch.setattr(semantic._model, "encode", timeout_encode)
+
+    match = semantic_match("what are the library hours", entries)
+    assert match is None

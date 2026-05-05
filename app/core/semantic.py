@@ -1,4 +1,5 @@
 import structlog
+import concurrent.futures
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 from app.core.loader import FAQEntry
@@ -69,7 +70,14 @@ def semantic_match(query: str, entries: list[FAQEntry]) -> FAQEntry | None:
     if _corpus_cache["embeddings"] is None:
         build_corpus_cache(entries)
 
-    query_embedding = _model.encode([query], normalize_embeddings=True)
+    try:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            future = executor.submit(
+                _model.encode, [query], normalize_embeddings=True)
+            query_embedding = future.result(timeout=3.0)
+    except concurrent.futures.TimeoutError:
+        log.warning("semantic_match_timeout", query=query)
+        return None
     scores = cosine_similarity(query_embedding, _corpus_cache["embeddings"])[0]
 
     best_idx = int(scores.argmax())
