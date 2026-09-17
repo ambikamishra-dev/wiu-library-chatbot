@@ -22,13 +22,13 @@ No LLM. No API calls. No ongoing cost.
 
 Every incoming query goes through two stages before a response is returned.
 
-**Stage 1 — Keyword matching** runs first because it is fast and free. The query is normalized, punctuation stripped, and compared against keyword lists for each FAQ entry. If two or more keywords match, that entry wins and the response is returned immediately, no model involved.
+**Stage 1 — Keyword matching** runs first because it is fast and free. The query is normalized, punctuation stripped, and compared against keyword lists for each FAQ entry. If two or more keywords match, that entry wins and the response is returned immediately — no model involved.
 
 **Stage 2 — Semantic matching** runs only when keyword matching finds nothing. The query is embedded using `BAAI/bge-small-en-v1.5` (a 33MB model that runs on CPU) and compared against pre-computed embeddings for all FAQ questions and their alternative phrasings. The closest match above a confidence threshold of 0.75 is returned.
 
 Both stages include domain scoping — if the query has no library-related vocabulary and scores below 0.90 confidence, the bot returns a fallback rather than a plausible-sounding wrong answer.
 
-FAQ embeddings are pre-computed once at startup and cached in memory. Per-request work is one query embedding only, keeping response times under 5ms even at 200 concurrent users.
+FAQ embeddings are pre-computed once at startup and cached in memory. Per-request work is one query embedding only, keeping response times under 5ms even at 200 concurrent users. The semantic matcher has a 3 second timeout — if embedding exceeds this, the fallback fires instead of the request hanging.
 
 ---
 
@@ -65,30 +65,32 @@ api/routes.py — all HTTP endpoints, orchestrates the pipeline
 core/
 loader.py — reads the Excel file, owns the FAQ cache
 matcher.py — keyword matching with domain-aware scoring
-semantic.py — embedding, corpus cache, cosine similarity
+semantic.py — embedding, corpus cache, cosine similarity, timeout
 guardrails.py — input sanitization, rate limiting, injection blocking
 static/ — JS widget and CSS served directly by FastAPI
 templates/ — demo HTML page for local testing
 main.py — app assembly, startup tasks, CORS, lifespan
 config.py — typed settings from environment variables
-
-tests/ — 68 tests across loader, matcher, semantic, guardrails, routes
+tests/ — 69 tests across an eval harness covering loader,
+matcher, semantic, guardrails, and API integration
 data/ — FAQ Excel file (excluded from git)
 logs/ — SQLite unanswered log (excluded from git)
+
+
 
 ---
 
 ## Running it
 
+```bash
 git clone https://github.com/ambikamishra-dev/wiu-library-chatbot.git
 cd wiu-library-chatbot
 python3 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
-
 # configure .env and add your FAQ Excel file to data/
-
 python3 -m uvicorn app.main:app --reload
+```
 
 Or with Docker:
 
@@ -108,6 +110,7 @@ GET /api/config — returns API base URL for widget initialisation
 GET /api/quick-buttons — returns pre-loaded question list for the widget
 GET /api/admin/unanswered — [auth required] unanswered query log
 GET /api/admin/reload — [auth required] reload FAQ data without restart
+
 
 Admin endpoints require HTTP Basic Auth. Credentials set via `ADMIN_USERNAME` and `ADMIN_PASSWORD` in `.env`.
 
@@ -131,7 +134,7 @@ All settings live in `.env`. See `.env.example` for the full list. The ones that
 python3 -m pytest tests/ -v
 ```
 
-68 tests. Covers FAQ loading, keyword and semantic matching, domain scoping, input guardrails, rate limiting, admin authentication, response caching, and API integration end to end.
+69 tests across an eval harness covering FAQ loading, keyword and semantic matching, domain scoping, input guardrails, rate limiting, admin authentication, response caching, and API integration end to end. Every failure path degrades gracefully — the user never sees a blank screen or a Python traceback.
 
 ---
 
