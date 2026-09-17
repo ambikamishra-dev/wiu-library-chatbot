@@ -60,21 +60,24 @@ The 1ms median comes from the response cache — repeated queries are served fro
 
 ## Project layout
 
+```
 app/
-api/routes.py — all HTTP endpoints, orchestrates the pipeline
-core/
-loader.py — reads the Excel file, owns the FAQ cache
-matcher.py — keyword matching with domain-aware scoring
-semantic.py — embedding, corpus cache, cosine similarity, timeout
-guardrails.py — input sanitization, rate limiting, injection blocking
-static/ — JS widget and CSS served directly by FastAPI
-templates/ — demo HTML page for local testing
-main.py — app assembly, startup tasks, CORS, lifespan
-config.py — typed settings from environment variables
-tests/ — 69 tests across an eval harness covering loader,
-matcher, semantic, guardrails, and API integration
-data/ — FAQ Excel file (excluded from git)
-logs/ — SQLite unanswered log (excluded from git)
+  api/routes.py        — all HTTP endpoints, orchestrates the pipeline
+  core/
+    loader.py          — reads the Excel file, owns the FAQ cache
+    matcher.py         — keyword matching with domain-aware scoring
+    semantic.py        — embedding, corpus cache, cosine similarity, timeout
+    guardrails.py      — input sanitization, rate limiting, injection blocking
+  static/              — JS widget and CSS served directly by FastAPI
+  templates/           — demo HTML page for local testing
+  main.py              — app assembly, startup tasks, CORS, lifespan
+  config.py            — typed settings from environment variables
+
+tests/                 — 69 tests across an eval harness covering loader,
+                         matcher, semantic, guardrails, and API integration
+data/                  — FAQ Excel file (excluded from git)
+logs/                  — SQLite unanswered log (excluded from git)
+```
 
 
 
